@@ -36,8 +36,11 @@ auto TablePage::GetNextTupleOffset(const TupleMeta &meta, const Tuple &tuple) co
   } else {
     slot_end_offset = BUSTUB_PAGE_SIZE;
   }
-  auto tuple_offset = slot_end_offset - tuple.GetLength();
   auto offset_size = TABLE_PAGE_HEADER_SIZE + TUPLE_INFO_SIZE * (num_tuples_ + 1);
+  if (tuple.GetLength() > slot_end_offset) {
+    return std::nullopt;
+  }
+  auto tuple_offset = slot_end_offset - tuple.GetLength();
   if (tuple_offset < offset_size) {
     return std::nullopt;
   }
